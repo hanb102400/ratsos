@@ -1,3 +1,9 @@
+# ratsos
+*.img
+*.raw
+*.bin
+*.o
+
 # Prerequisites
 *.d
 
