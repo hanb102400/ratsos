@@ -28,7 +28,7 @@ Entry:
 
     ;---------------------------
     ;输出字符串
-    mov si,HelloText		;将HelloText的地址放入di
+    mov si,HelloText		;将HelloText的地址放入si
     mov dh,0				;设置显示行
     call PutString			;调用函数
     

@@ -28,7 +28,7 @@ Entry:
 
     ;---------------------------
     ;输出字符串
-    mov di,HelloText		;将HelloText的地址放入di
+    mov si,HelloText	                ;将HelloText的地址放入si
     mov dh,0				;设置显示行
     call PutString			;调用函数
     
@@ -50,7 +50,7 @@ HelloText: db "hello,ratsos!",0
 ; ------------------------------------------------------------------------
 PutString:
 			mov cx,0			;BIOS中断参数：显示字符串长度
-			mov bx,di
+			mov bx,si
 	.s1:;获取字符串长度
 			mov al,[bx]			;读取1个字节到al
 			add bx,1			;读取下个字节
@@ -59,7 +59,7 @@ PutString:
 			add	cx,1			;计数器
 			jmp .s1
 	.s2:;显示字符串
-			mov bx,di
+			mov bx,si
 			mov bp,bx
 			mov ax,ds
 			mov es,ax			;BIOS中断参数：计算[ES:BP]为显示字符串开始地址

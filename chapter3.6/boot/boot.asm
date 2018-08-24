@@ -9,6 +9,11 @@ CYLINDER_NUM	EQU	10			;读取柱面数
 
 	org     0x7c00 				;指明程序的偏移的基地址
 
+;----------- loader const ------------------
+LOADER_SECTOR_LBA  		equ 0x1		;第2个逻辑扇区开始
+LOADER_SECTOR_COUNT		equ 9		;读取9个扇区
+LOADER_BASE_ADDR 		equ 0x9000  ;内存地址0x9000
+;-------------------------------------------
 ;启动程序
 	jmp     Entry
 	db      0x90
@@ -17,6 +22,16 @@ CYLINDER_NUM	EQU	10			;读取柱面数
 ;程序核心内容
 Entry:
 
+	;------------------
+	;初始化寄存器
+	mov ax,0				
+	mov ss,AX
+	mov ds,AX
+	mov es,AX
+	mov sp,0x7c00
+
+	;------------------
+	;初始化文本模式屏幕
 	mov ah,0x06				;清除屏幕					
 	mov al,0
 	mov cx,0   
@@ -74,11 +89,11 @@ ReadSectorLoop:
 		add	ch,1				;设置柱面递增+1;读取下一柱面
 		cmp	ch,CYLINDER_NUM		;判断是否已经读取10个柱面
 		jb	ReadSectorLoop		;上面cmp判断(<)结果为true则跳转到DisplayError
+		
+		
+        jmp LOADER_BASE_ADDR
 	
-;程序挂起
-Fin:
-	hlt 					;让CPU挂起，等待指令。
-	jmp Fin
+
 
 ; ------------------------------------------------------------------------
 ;准备显示字符串
