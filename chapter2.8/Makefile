@@ -24,9 +24,9 @@ target: prepare $(build)/ratsos.raw
 	$(QEMU) -m 128  -localtime -hda $(build)/ratsos.raw
 
 $(build)/ratsos.raw: $(build)/boot.bin $(build)/loader.bin
-	$(QEMU-IMG) create -f raw $(build)/ratsos.raw 128M
-	dd bs=512 count=1 if=$(build)/boot.bin of=$(build)/ratsos.raw
-	dd bs=512 count=1 if=$(build)/loader.bin of=$(build)/ratsos.raw seek=1
+	$(QEMU-IMG) create -f raw $(build)/ratsos.raw 32M
+	dd bs=512 count=1 if=$(build)/boot.bin of=$(build)/ratsos.raw conv=notrunc
+	dd bs=512 count=1 if=$(build)/loader.bin of=$(build)/ratsos.raw seek=1 conv=notrunc
 
 $(build)/%.bin: $(boot)/%.asm
 	$(NASM) -f bin -o $(build)/$*.bin $(boot)/$*.asm	

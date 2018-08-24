@@ -41,36 +41,26 @@ Fin:
 ;准备显示字符串
 HelloText: DB "hello,ratsos!",0
 
-
 ; ------------------------------------------------------------------------
-; 显示字符串函数:PutString
+; 显示字串函数:PutString
 ; 参数:
-; si = 字符串开始地址,
+; di = 字符串开始地址,
 ; dh = 第N行，0开始
 ; ------------------------------------------------------------------------
+;循环调用BIOS执行显示字符串
 PutString:
-			mov cx,0			;BIOS中断参数：显示字符串长度
-			mov bx,di
-	.s1:;获取字符串长度
-			mov al,[bx]			;读取1个字节到al
-			add bx,1			;读取下个字节
-			cmp al,0			;是否以0结束
-			je .s2
-			add	cx,1			;计数器
-			jmp .s1
-	.s2:;显示字符串
-			mov bx,di
-			mov bp,bx
-			mov ax,ds
-			mov es,ax			;BIOS中断参数：计算[ES:BP]为显示字符串开始地址
+	.putChar:
+		mov al,[di]				;将[di]指向的内存单元的一个字节放入AL。
+		add di,1				;di指向下一个字节
+		cmp al,0				;判断[di]中的字符值是否==0
 
-			mov ah,0x13			;BIOS中断参数：显示文字串
-			mov al,0x01			;BIOS中断参数：文本输出方式(40×25 16色 文本)
-			mov bh,0x0			;BIOS中断参数：指定分页为0
-			mov bl,0x1F			;BIOS中断参数：指定白色文字			
-			mov dl,0			;列号为0
-			int 0x10			;调用BIOS中断操作显卡。输出字符串
-			ret
+		je .putEnd				;为0字符则串结束
+		mov ah,0x0e				;BIOS中断参数：显示一个文字
+		mov bl,0x03				;BIOS中断参数：指定字符颜色
+		int 0x10				;调用BIOS中断操作显卡。输出字符
+		jmp .putChar
+	.putEnd:
+		ret
 
 FillSector:
 	RESB    510-($-$$)       	;处理当前行$至结束(1FE)的填充

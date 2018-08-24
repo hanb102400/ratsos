@@ -23,9 +23,9 @@ Entry:
 	;初始化寄存器
 	MOV AX,0				
 	MOV SS,AX
-	MOV SP,0x7c00
 	MOV DS,AX
 	MOV ES,AX
+	MOV SP,0x7c00
 	
 	;------------------
 	;初始化文本模式屏幕

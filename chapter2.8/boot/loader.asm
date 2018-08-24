@@ -1,4 +1,4 @@
-;icyos
+;ratsos
 ;TAB=4
 [BITs 16]
 ;----------- loader const ------------------
@@ -17,9 +17,9 @@ Entry:
 			
 	;------------------
 	;显示hello
-	MOV DI,HelloMessage		;将Message1段的地址放入SI
+	MOV DI,HelloMessage			;将Message1段的地址放入SI
 	mov DH,0				;设置显示行
-	CALL PutString			;调用函数
+	CALL PutString				;调用函数
 
 	
 ;程序挂起		

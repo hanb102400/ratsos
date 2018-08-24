@@ -11,30 +11,28 @@ Entry:
 	
 	;------------------
 	; 设置显示模式
-	MOV		ah,0x0			
-	MOV		al,0x13			
-	MOV		ax,0x4F02		; 参数：设置VGA显示器模式
-	MOV     bx,0x107		; 参数: 1280×1024(256色)
+	MOV		ah,0x0			; 参数：设置VGA显示器模式
+	MOV		al,0x13			; 参数: 640×480(256色)
 	INT		0x10			; 调用BIOS中断,设置显示模式
 			
 	;------------------
 	;显示hello
-	MOV DI,HelloMessage		;将Message1段的地址放入SI
+	MOV DI,HelloMessage			;将Message1段的地址放入SI
 	mov DH,0				;设置显示行
-	CALL PutString			;调用函数
+	CALL PutString				;调用函数
 	
 	;------------------
 	;打开A20
-	CLI						; 禁止CPU级别的中断
+	CLI					;禁止CPU级别的中断
 
-    in al,0x92
-    or al,0000_0010B        ;设置第1位为1
+	in al,0x92
+	or al,0000_0010B        		;设置第1位为1
 	
 	;------------------
-    ;进入保护模式
-    mov eax,CR0
-    or eax,0x00000001            ; 设置第0位为1
-    mov CR0,eax
+	;进入保护模式
+	mov eax,CR0
+	or eax,0x00000001            		;设置第0位为1
+	mov CR0,eax
 
 	;-----------------------------------------------
 	;加载GDT
@@ -48,8 +46,8 @@ Entry:
 ; ------------------------------------------------------------------------
 ;定义GDT全局描述符表
 gdt_addr :
-	DW		8*2-1							;指定段上限(GDT全局描述符表的大小)
-	DD		gdt_table_addr					;GDT全局描述符表的地址
+	DW		8*2-1					;指定段上限(GDT全局描述符表的大小)
+	DD		gdt_table_addr				;GDT全局描述符表的地址
 gdt_table_addr:
 	DW		0xffff,0x0000,0x9200,0x00cf		;可以读写的段(segment)32bit内存大小
 	DW		0xffff,0x0000,0x9a28,0x0047		;可以执行的段GDT2,280000地址开始
