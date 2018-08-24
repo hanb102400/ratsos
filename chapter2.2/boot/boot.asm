@@ -1,22 +1,22 @@
 ;Rats OS
 ;TAB=4
 [BITs 16]
-	ORG     0x7c00 			;指明程序的偏移的基地址
+    org     0x7c00 			;指明程序的偏移的基地址
 
 ;引导扇区代码  
-	JMP     Entry
-	DB      0x90
-	DB      "RATSBOOT"         
+    jmp     Entry
+    db      0x90
+    db      "RATSBOOT"         
 
 ;程序核心内容
 Entry:
-	JMP Fin
+    jmp Fin
 
 ;程序挂起
 Fin:
-	HLT                     ;让CPU重复挂起，等待指令。
-	JMP Fin
+    hlt                     ;让CPU挂起，等待指令。
+    jmp Fin
 
 FillSector:
-	RESB    510-($-$$)      ;处理当前行$至结束(1FE)的填充
-	DB      0x55, 0xaa
+    resb    510-($-$$)      ;处理当前行$至结束(1FE)的填充
+    db      0x55, 0xaa

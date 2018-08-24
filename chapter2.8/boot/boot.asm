@@ -46,18 +46,18 @@ Entry:
 	mov ebx,LOADER_SECTOR_LBA 	;LBA扇区号
 	mov cx,LOADER_SECTOR_COUNT	;读取扇区数
 	mov di,LOADER_BASE_ADDR		;写入内存地址
-	call ReadDisk16
+	call ReadDiskLBS16
 	
 	JMP LOADER_BASE_ADDR
 	
 ; ------------------------------------------------------------------------
-; 读取磁盘:ReadDisk16
+; 读取磁盘:ReadDiskLBS16
 ; 参数:
 ; ebx 扇区逻辑号
 ; cx 读入的扇区数,8位
 ; di 读取后的写入内存地址
 ; ------------------------------------------------------------------------	
-ReadDisk16:
+ReadDiskLBS16:
 	;设置读取的扇区数
 	mov al,cl
 	mov dx,0x1F2
