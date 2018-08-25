@@ -2,16 +2,14 @@
 ;TAB=4
 [BITs 16]
 
-;定义常量
-DISC_ADDR 		EQU 0x8000		;磁盘第一个扇区开始，加载到内存缓冲的地址
-SECTOR_NUM 		EQU 18			;读取扇区数
-CYLINDER_NUM	EQU	10			;读取柱面数
 
 	org     0x7c00 				;指明程序的偏移的基地址
 
 ;----------- loader const ------------------
-LOADER_SECTOR_LBA  		equ 0x1		;第2个逻辑扇区开始
-LOADER_SECTOR_COUNT		equ 9		;读取9个扇区
+CONST_SECTOR_NUM		equ 18		;读取18个扇区
+
+LOADER_SECTOR_CHS 		equ 0x1		;第2个逻辑扇区开始
+LOADER_CYLINDER_NUM		equ 10		;读取10个柱面
 LOADER_BASE_ADDR 		equ 0x9000  ;内存地址0x9000
 ;-------------------------------------------
 ;启动程序
@@ -54,13 +52,9 @@ Entry:
 	call PutString			;调用函数
 
 
-	mov	ax,DISC_ADDR/0x10	;设置磁盘读取的缓冲区基本地址为ES=0x820。[ES:BX]=ES*0x10+BX
-	mov	es,ax				;BIOS中断参数：ES:BX＝缓冲区的地址
-
-
 	;---------------------------
 	;读取磁盘
-	mov	ax,DISC_ADDR/0x10	;设置磁盘读取的缓冲区基本地址为ES=0x820。[ES:BX]=ES*0x10+BX
+	mov	ax,LOADER_BASE_ADDR/0x10	;设置磁盘读取的缓冲区基本地址为ES=0x820。[ES:BX]=ES*0x10+BX
 	mov	es,ax				;BIOS中断参数：ES:BX＝缓冲区的地址
 
 	mov	ch,0				;设置柱面为0
@@ -74,21 +68,21 @@ ReadSectorLoop:
 	ReadNextSector:
 		mov	ax,es
 		add	ax,0x0020			
-		mov	es,ax				;内存单元基址后移0x20(512字节)。[ES+0x20:]
-		add	cl,1				;读取扇区数递增+1
-		cmp	cl,SECTOR_NUM		;判断是否读取到18扇区
-		jbe	ReadSectorLoop		;上面cmp判断(<=)结果为true则跳转到DisplayError
+		mov	es,ax						;内存单元基址后移0x20(512字节)。[ES+0x20:]
+		add	cl,1						;读取扇区数递增+1
+		cmp	cl,CONST_SECTOR_NUM			;判断是否读取到18扇区
+		jbe	ReadSectorLoop				;上面cmp判断(<=)结果为true则跳转到DisplayError
 
-;读取另一面磁头。循环读取柱面
-		mov	cl,1				;设置柱面为0
-		add	dh,1				;设置磁头递增+1:读取下一个磁头
-		cmp	dh,2				;判断磁头是否读取完毕
-		jb	ReadSectorLoop		;上面cmp判断(<)结果为true则跳转到DisplayError
+	;读取另一面磁头。循环读取柱面
+		mov	cl,1						;设置柱面为0
+		add	dh,1						;设置磁头递增+1:读取下一个磁头
+		cmp	dh,2						;判断磁头是否读取完毕
+		jb	ReadSectorLoop				;上面cmp判断(<)结果为true则跳转到DisplayError
 
-		mov	dh,0				;设置磁头为0
-		add	ch,1				;设置柱面递增+1;读取下一柱面
-		cmp	ch,CYLINDER_NUM		;判断是否已经读取10个柱面
-		jb	ReadSectorLoop		;上面cmp判断(<)结果为true则跳转到DisplayError
+		mov	dh,0						;设置磁头为0
+		add	ch,1						;设置柱面递增+1;读取下一柱面
+		cmp	ch,LOADER_CYLINDER_NUM		;判断是否已经读取10个柱面
+		jb	ReadSectorLoop				;上面cmp判断(<)结果为true则跳转到DisplayError
 		
 		
         jmp LOADER_BASE_ADDR
