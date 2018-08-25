@@ -16,8 +16,8 @@ loader.bin 扇区1-4
 ### 内存信息
 
 0x7c00 boot.bin
-0x9200 loader.bin
-0x10000 loader1.bin
+0x9000 loader.bin
+0x9800 loader1.bin
 
 
 ### GDT信息
