@@ -1,6 +1,6 @@
-;RatsOS
-;TAB=4
-[BITs 16]
+;Rats OS
+;Tab=4
+[bits 16]
 
 
 	org     0x7c00 				;指明程序的偏移的基地址

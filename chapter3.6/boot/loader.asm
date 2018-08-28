@@ -1,6 +1,6 @@
-;ratsos
-;TAB=4
-[BITs 16]
+;Rats OS
+;Tab=4
+[bits 16]
 
 section loader vstart=LOADER_BASE_ADDR ;指明程序的偏移的基地址
 
