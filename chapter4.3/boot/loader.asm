@@ -1,4 +1,5 @@
 ;ratsos
+;TAB=4
 
 %include "boot/boot.inc"
 
@@ -10,7 +11,7 @@ section loader vstart=LOADER_BASE_ADDR ;指明程序的偏移的基地址
 
 ;---------------------------------
 ;定义GDT全局描述符表
-;code: 0x0000ffff, 0x00cf9a00   : 
+;code: 0x0000ffff, 0x00cf9a00   
 ;data: 0x0000ffff, 0x00cf9200
 ;vga:
 Gdt_Addr:
@@ -22,7 +23,6 @@ Gdt_Table_Addr:
     Gdt_Descriptor 0x00000000, 0xfffff, DESC_DATA  ;可以读写的段
     Gdt_Descriptor 0x000b8000, 0x07fff, DESC_DATA  ;vga段
     dw		0	
-
 
 ;程序核心内容
 Entry:
@@ -46,23 +46,6 @@ Entry:
     mov 	eax,cr0
     or 		eax,0x1      ;设置第0位为1
     mov 	cr0,eax
-
-    jmp	 dword   selector_code:FlushPipeline       
-
-
-[bits 32]
-;------------------    
-;刷新流水线
-FlushPipeline:
-
-    mov		ax,selector_code			;  可读写的32bit
-    mov		ds,ax
-    mov		es,ax
-    mov		fs,ax
-    mov     ax, selector_vga
-    mov     gs, ax
-    
-    jmp LOADER1_BASE_ADDR
 
 ;程序挂起
 Fin:

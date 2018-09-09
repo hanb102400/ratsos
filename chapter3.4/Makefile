@@ -1,9 +1,6 @@
 
 
-
-
 NASM=nasm
-
 BOCHS=bochs
 BXIMAGE=bximage
 
@@ -15,7 +12,7 @@ build=build
 target: prepare image
 	$(BOCHS) -f bochsrc.me
 
-image:  $(build)/boot.bin $(build)/loader.bin
+image: $(build)/boot.bin $(build)/loader.bin
 	$(BXIMAGE) -mode=create -imgmode=flat -hd=32 -q $(build)/ratsos.img  &
 	sleep 1
 	dd if=$(build)/boot.bin of=$(build)/ratsos.img bs=512 count=1  conv=notrunc
@@ -35,5 +32,3 @@ prepare:
 clean:
 	@echo "clean dir $(build)"
 	rm -rf $(build)/*
-
-

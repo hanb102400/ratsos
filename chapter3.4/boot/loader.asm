@@ -1,6 +1,6 @@
 ;ratsos
 ;TAB=4
-[BITs 16]
+[bits 16]
 
 section loader vstart=LOADER_BASE_ADDR ;指明程序的偏移的基地址
 
@@ -15,8 +15,8 @@ Entry:
 
 	;---------------------------
     ;输出字符串
-    mov si,HelloMsg			;将HelloMsg的地址放入si
-    mov dh,0				;设置显示行
+    mov  si,LoaderMsg			;将LoaderMsg的地址放入si
+    mov  dh,0				;设置显示行
     call PutString			;调用函数
 
 
@@ -24,12 +24,12 @@ Entry:
 Fin:
     hlt 					;让CPU挂起，等待指令。
     jmp Fin
-	
+
 ; ------------------------------------------------------------------------
 ; 显示字符串函数:PutString
 ; 参数:
-; SI = 字符串开始地址, 
-; DH = 屏幕第N行，0开始
+; si = 字符串开始地址, 
+; dh = 屏幕第N行，0开始
 ; ------------------------------------------------------------------------	
 PutString:
 		mov cx,0			;BIOS中断参数：显示字符串长度
@@ -56,6 +56,6 @@ PutString:
 		ret
 
 ;准备显示字符串
-HelloMsg: DB "hello,ratsos!",0
+LoaderMsg: DB "hello,Loader!",0
 
 	times	512-($-$$) db  0 ; 处理当前行$至结束(1FE)的填充	

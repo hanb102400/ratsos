@@ -1,6 +1,5 @@
 
 
-
 # tools
 NASM=nasm
 QEMU=qemu-system-x86_64
@@ -24,3 +23,5 @@ prepare:
 
 clean:
 	rm -rf $(build)/*
+
+

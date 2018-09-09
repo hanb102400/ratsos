@@ -10,22 +10,25 @@
 
 ;程序核心内容
 Entry:
-    mov ax,0xb800
-    mov es,ax	                ;显存段地址
-    mov byte [es:0x00],'r'      ;输出字符
-    mov byte [es:0x01],0x17     ;设置颜色(背景色蓝，前景色白)
-    mov byte [es:0x02],'a'
-    mov byte [es:0x03],0x17
-    mov byte [es:0x04],'t'
-    mov byte [es:0x05],0x17
-    mov byte [es:0x06],'s'
-    mov byte [es:0x07],0x17
-    mov byte [es:0x08],'o'
-    mov byte [es:0x09],0x17
-    mov byte [es:0x0a],'s'
-    mov byte [es:0x0b],0x17
-  
 
+    ;---------------------------
+    ;清除屏幕	
+    mov ah,0x06							
+    mov al,0
+    mov cx,0   
+    mov dx,0xffff  
+    mov bh,0x17				;属性为蓝底白字
+    int 0x10
+    
+    ;---------------------------
+    ;光标位置初始化
+    mov ah,0x02				
+    mov dx,0
+    mov bh,0
+    mov dh,0x0
+    mov dl,0x0
+    int 0x10
+    
 ;程序挂起
 Fin:
     hlt                     	;让CPU挂起，等待指令。

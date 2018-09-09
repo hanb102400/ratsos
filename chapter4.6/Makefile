@@ -1,37 +1,37 @@
 
-
-
 # tools
-PLATFORM=Linux
 NASM=nasm
 QEMU=qemu-system-x86_64
 QEMU-IMG=qemu-img
 BOCHS=bochs
-BX-IMG=bximage
+BXIMAGE=bximage
 
 
 # args
 boot=boot
+kernel=kernel
 build=build
 	
 
-target: prepare img  
+target: prepare image
 	$(BOCHS) -f bochsrc.me
 
 
-img: $(build)/ratsos.img	
-	@echo "build img completed"
-
-$(build)/ratsos.img:$(build)/boot.bin $(build)/loader.bin 
-	$(BX-IMG) -hd -mode=flat -size=32 -q $(build)/ratsos.img
+image: $(build)/boot.bin $(build)/loader.bin $(build)/kernel.bin
+	$(BXIMAGE) -hd -mode=flat -size=32 -q $(build)/ratsos.img 
 	sleep 1
 	dd if=$(build)/boot.bin of=$(build)/ratsos.img bs=512 count=1  conv=notrunc
-	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=1 seek=1 conv=notrunc
+	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=4 seek=1 conv=notrunc
+	dd if=$(build)/kernel.bin of=$(build)/ratsos.img bs=512 count=25 seek=5 conv=notrunc
+
+
+$(build)/kernel.bin: $(kernel)/main.asm
+	$(NASM) -f bin -o $(build)/kernel.bin $(kernel)/main.asm	
 
 $(build)/%.bin: $(boot)/%.asm
 	$(NASM) -f bin -o $(build)/$*.bin $(boot)/$*.asm	
 
-prepare: $(build)
+prepare:
 	@echo "prepare dir $(build)"
     ifeq ($(build), $(wildcard $(build)))
 		@echo "build directory exist..."

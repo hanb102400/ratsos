@@ -1,12 +1,17 @@
 ;RatsOS
-;Tab=4
+;TAB=4
 
 %include "boot/boot.inc"
 
-[bits 16]
+[BITs 16]
 
     org     0x7c00 				;指明程序的偏移的基地址
 
+;----------- loader const ------------------
+LOADER_SECTOR_LBA  		equ 0x1		;第2个逻辑扇区开始
+LOADER_SECTOR_COUNT		equ 9		;读取9个扇区
+LOADER_BASE_ADDR 		equ 0x9000  ;内存地址0x9000
+;-------------------------------------------
 
 ;引导扇区代码 
     jmp     Entry
@@ -25,24 +30,22 @@ Entry:
     mov es,AX
     mov sp,0x7c00
 
-    ;---------------------------
-    ;清除屏幕	
-    mov ah,0x06							
+    ;------------------
+    ;初始化文本模式屏幕
+    mov ah,0x06				;清除屏幕					
     mov al,0
     mov cx,0   
     mov dx,0xffff  
     mov bh,0x17				;属性为蓝底白字
     int 0x10
     
-    ;---------------------------
-    ;光标位置初始化
-    mov ah,0x02				
+
+    mov ah,0x02				;光标位置初始化
     mov dx,0
     mov bh,0
     mov dh,0x0
     mov dl,0x0
     int 0x10
-
 
     ;------------------
     ;读取硬盘1-10扇区

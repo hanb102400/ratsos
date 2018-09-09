@@ -1,18 +1,19 @@
 ;RatsOS
-;Tab=4
-
-%include "boot/boot.inc"
-
-[bits 16]
+;TAB=4
+[BITs 16]
 
     org     0x7c00 				;指明程序的偏移的基地址
 
+;----------- loader const ------------------
+LOADER_SECTOR_LBA  		equ 0x1		;第2个逻辑扇区开始
+LOADER_SECTOR_COUNT		equ 9		;读取9个扇区
+LOADER_BASE_ADDR 		equ 0x9000  ;内存地址0x9000
+;-------------------------------------------
 
 ;引导扇区代码 
     jmp     Entry
     db      0x90
-    db      "RATSBOOT"     		;启动区的名称可以是任意的字符串（8字节）   
-
+    db      "RATSBOOT"     		;启动区的名称可以是任意的字符串（8字节）    
 
 ;程序核心内容
 Entry:
@@ -25,23 +26,28 @@ Entry:
     mov es,AX
     mov sp,0x7c00
 
-    ;---------------------------
-    ;清除屏幕	
-    mov ah,0x06							
+    ;------------------
+    ;初始化文本模式屏幕
+    mov ah,0x06				;清除屏幕					
     mov al,0
     mov cx,0   
     mov dx,0xffff  
     mov bh,0x17				;属性为蓝底白字
     int 0x10
     
-    ;---------------------------
-    ;光标位置初始化
-    mov ah,0x02				
+
+    mov ah,0x02				;光标位置初始化
     mov dx,0
     mov bh,0
     mov dh,0x0
     mov dl,0x0
     int 0x10
+
+    ;---------------------------
+	;输出字符串
+	mov  di,BootMsg		;将BootMsg的地址放入di
+	mov  dh,0				;设置显示行
+	call PutString			;调用函数
 
 
     ;------------------
@@ -152,8 +158,6 @@ PutString:
             int 0x10			;调用BIOS中断操作显卡。输出字符串
             ret
 
-
-;扇区格式
-Fill0:
-    resb    510-($-$$)       	;处理当前行$至结束(1FE)填充0
-    db      0x55, 0xaa
+FillSector:
+    RESB    510-($-$$)       	;处理当前行$至结束(1FE)的填充
+    DB      0x55, 0xaa

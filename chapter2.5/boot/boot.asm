@@ -11,15 +11,18 @@
 ;程序核心内容
 Entry:
 
-    mov ah,0x06				;清除屏幕					
+    ;---------------------------
+    ;清除屏幕	
+    mov ah,0x06							
     mov al,0
     mov cx,0   
     mov dx,0xffff  
     mov bh,0x17				;属性为蓝底白字
     int 0x10
     
-
-    mov ah,0x02				;光标位置初始化
+    ;---------------------------
+    ;光标位置初始化
+    mov ah,0x02				
     mov dx,0
     mov bh,0
     mov dh,0x0
@@ -28,36 +31,42 @@ Entry:
 
     ;---------------------------
     ;输出字符串
-    mov si,HelloMsg		    ;将HelloMsg的地址放入si
-    call Func_Sprint		;调用函数
+    mov  si, BootMsg		;将BootMsg的地址放入si
+    mov  dh, 0				;设置显示行
+    call PutString			;调用函数
     
-    jmp $				;进入死循环，不再往下执行。
+;程序挂起
+Fin:
+    hlt 					;让CPU挂起，等待指令。
+    jmp Fin
+
 
 ; ------------------------------------------------------------------------
-; 显示字串函数:Func_Sprint
+; 显示字串函数:PutString
 ; 参数:
-; si = 字符串开始地址,
+; si = 字符串文本地址
 ; ------------------------------------------------------------------------
-Func_Sprint:
-   .cprint:
+PutString:
+	;------------------
+	;显示一个字符，si = 字符串文本地址
+    .putChar:
         mov al,[si]				;将[di]指向的内存单元的一个字节放入AL。
         inc si					;di指向下一个字节
         cmp al,0				;判断[di]中的字符值是否==0
 
-        je .printEnd			;为0字符则串结束
+        je .putEnd			;为0字符则串结束
         mov ah,0x0e				;BIOS中断参数：中断模式
         mov bl,0x03				;BIOS中断参数：指定字符颜色
         int 0x10				;调用BIOS中断操作显卡。输出字符
-        jmp .cprint
-   .printEnd:
+        jmp .putChar
+   .putEnd:
         ret
 
 ; ------------------------------------------------------------------------
 ;准备显示字符串
-HelloMsg: db "hello,ratsos!",0
+BootMsg: db "ratsos is booting!",0
 
-
-
-FillSector:
-    resb    510-($-$$)       	;处理当前行$至结束(1FE)的填充
+;扇区格式
+Fill0:
+    resb    510-($-$$)       	;处理当前行$至结束(1FE)填充0
     db      0x55, 0xaa
