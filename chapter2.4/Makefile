@@ -1,18 +1,8 @@
 
 
-## linux
-ifeq ($(shell uname),Linux)
-	PLATFORM="Linux"
-	NASM=nasm
-	QEMU=qemu-system-x86_64
-endif
 
-## windows
-ifeq ($(OS),Windows_NT)
-	PLATFORM="Windows"
-	NASM=D:/opt/nasm/nasm.exe
-	QEMU=D:/opt/qemu/qemu-system-x86_64.exe
-endif
+NASM=nasm
+QEMU=qemu-system-x86_64
 
 boot=boot
 build=build
@@ -33,5 +23,3 @@ prepare:
 clean:
 	rm -rf $(build)/*
 
-platform:
-	@echo $(PLATFORM)

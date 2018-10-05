@@ -2,7 +2,8 @@
 *.img
 *.raw
 *.bin
-*.o
+bochsout.txt
+build/*
 
 # Prerequisites
 *.d

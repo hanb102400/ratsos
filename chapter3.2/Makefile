@@ -1,5 +1,6 @@
 
 
+
 NASM=nasm
 BOCHS=bochs
 BXIMAGE=bximage
@@ -12,23 +13,23 @@ build=build
 target: prepare image
 	$(BOCHS) -f bochsrc.me
 
+image: $(build)/ratsos.img
 
-image: $(build)/boot.bin 
-	$(BXIMAGE) -mode=create -imgmode=flat -hd=32 -q $(build)/ratsos.img  &
+$(build)/ratsos.img: $(build)/boot.bin $(build)/loader.bin
+	#$(BXIMAGE) -mode=create -imgmode=flat -hd=32 -q $(build)/ratsos.img  
+	$(BXIMAGE) -hd -mode=flat -size=32m -q $(build)/ratsos.img 
 	sleep 1
 	dd if=$(build)/boot.bin of=$(build)/ratsos.img bs=512 count=1  conv=notrunc
+	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=1 seek=1 conv=notrunc
+
 
 $(build)/%.bin: $(boot)/%.asm
 	$(NASM) -f bin -o $(build)/$*.bin $(boot)/$*.asm	
 
 prepare:
-	@echo "prepare dir $(build)"
-	ifeq ($(build), $(wildcard $(build)))
-		@echo "build directory exist..."
-	else
-		mkdir -p $(build)
-	endif
+	-mkdir -p $(build)
 
 clean:
 	@echo "clean dir $(build)"
 	rm -rf $(build)/*
+
