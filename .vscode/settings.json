@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "console.h": "c"
+        "console.h": "c",
+        "stdint.h": "c",
+        "io.h": "c",
+        "global.h": "c",
+        "interrupt.h": "c"
     }
 }

@@ -1,6 +1,6 @@
 
-#include "console.h"
-#include "io.h"
+#include "../include/console.h"
+#include "../include/io.h"
 
 #define VGA_BASE 0xB8000;
 

@@ -13,8 +13,8 @@ lib=lib
 inc=inc
 
 ENTRY_POINT =  0x70000
-CFLAGS = -m32 -c  -fno-builtin # --Wall -W  fno-builtin -Wstrict-prototypes -Wmissing-prototypes 
-LDFLAGS = -m elf_i386 -e _start -Ttext $(ENTRY_POINT) 
+CFLAGS = -m32 -c  -fno-builtin -fno-stack-protector  # --Wall -W  fno-builtin -Wstrict-prototypes -Wmissing-prototypes 
+LDFLAGS = -m elf_i386 -e _start  -Ttext $(ENTRY_POINT)  
 
 
 target: prepare image  
@@ -30,19 +30,17 @@ $(build)/ratsos.img: $(build)/boot.bin $(build)/loader.bin $(build)/kernel.bin
 	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=4 seek=1 conv=notrunc
 	dd if=$(build)/kernel.bin of=$(build)/ratsos.img bs=512 count=25 seek=5 conv=notrunc
 
-$(build)/kernel.bin: $(build)/main.o $(build)/lib/console.o  $(build)/lib/io.o
-	$(LD) -o $(build)/kernel.bin  $(build)/main.o  $(build)/lib/console.o  $(build)/lib/io.o  $(LDFLAGS) 
-
+$(build)/kernel.bin: $(build)/main.o $(build)/lib/console.o  $(build)/lib/io.o $(build)/lib/interrupt.o
+	$(LD) -o $(build)/kernel.bin  $(build)/main.o  $(build)/lib/console.o  $(build)/lib/io.o  $(build)/lib/interrupt.o $(LDFLAGS) 
+		
 $(build)/main.o: $(kernel)/main.c
-	$(CC) -o   $(build)/main.o  $(kernel)/main.c -I include $(CFLAGS) 
-
-
-$(build)/lib/console.o: $(kernel)/console.c 
-	$(CC) -o   $(build)/lib/console.o  -I include $(kernel)/console.c $(CFLAGS) 
+	$(CC) -o  $(build)/main.o  $(kernel)/main.c  $(CFLAGS) 
 
 $(build)/lib/io.o: $(lib)/io.asm	
 	$(NASM) -f elf -o $(build)/lib/io.o $(lib)/io.asm	
 
+$(build)/lib/%.o: $(lib)/%.c 
+	$(CC) -o  $(build)/lib/$*.o  $(lib)/$*.c $(CFLAGS) 
 
 $(build)/%.bin: $(boot)/%.asm
 	$(NASM) -f bin -o $(build)/$*.bin $(boot)/$*.asm	

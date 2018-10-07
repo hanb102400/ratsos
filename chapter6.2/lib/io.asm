@@ -9,25 +9,25 @@ global io_hlt
 
 [section .text]
 
-io_inb:     ;int io_inb(int port)
+io_inb:     ;uint32 io_inb(uint32 port)
     mov edx,[esp+4]
     mov eax,0
     in  al ,dx
     ret
 
-io_outb:    ;void io_outb(int port,int data)
+io_outb:    ;void io_outb(uint32 port,uint32 data)
     mov edx,[esp+4]
     mov eax,[esp+8]
     out dx, al
     ret
 
-io_inw:     ;int io_inw(int port)
+io_inw:     ;uint32 io_inw(uint32 port)
     mov edx,[esp+4]
     mov eax,0
     in  ax ,dx
     ret
 
-io_outw:    ;void io_outw(int port,int data)
+io_outw:    ;void io_outw(uint32 port,uint32 data)
     mov edx,[esp+4]
     mov eax,[esp+8]
     out dx, ax
