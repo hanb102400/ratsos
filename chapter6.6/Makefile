@@ -30,8 +30,8 @@ $(build)/ratsos.img: $(build)/boot.bin $(build)/loader.bin $(build)/kernel.bin
 	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=4 seek=1 conv=notrunc
 	dd if=$(build)/kernel.bin of=$(build)/ratsos.img bs=512 count=25 seek=5 conv=notrunc
 
-$(build)/kernel.bin: $(build)/main.o $(build)/lib/console.o  $(build)/lib/io.o $(build)/lib/interrupt.o
-	$(LD) -o $(build)/kernel.bin  $(build)/main.o  $(build)/lib/console.o  $(build)/lib/io.o  $(build)/lib/interrupt.o $(LDFLAGS) 
+$(build)/kernel.bin: $(build)/main.o $(build)/lib/console.o  $(build)/lib/io.o $(build)/lib/interrupt.o $(build)/lib/keyboard.o
+	$(LD) -o $(build)/kernel.bin  $(build)/main.o  $(build)/lib/console.o  $(build)/lib/io.o  $(build)/lib/interrupt.o  $(build)/lib/keyboard.o $(LDFLAGS) 
 		
 $(build)/main.o: $(kernel)/main.c
 	$(CC) -o  $(build)/main.o  $(kernel)/main.c  $(CFLAGS) 

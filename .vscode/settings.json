@@ -4,6 +4,7 @@
         "stdint.h": "c",
         "io.h": "c",
         "global.h": "c",
-        "interrupt.h": "c"
+        "interrupt.h": "c",
+        "keyboard.h": "c"
     }
 }

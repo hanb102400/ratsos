@@ -1,5 +1,6 @@
 
 #include "../include/io.h"
+#include "../include/global.h"
 #include "../include/console.h"
 #include "../include/interrupt.h"
 

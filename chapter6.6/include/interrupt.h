@@ -14,15 +14,14 @@ struct gate_desc
     uint16 handler_offset_high;
 };
 
+void set_interrupt_desc(struct gate_desc *p_gate_desc, uint8 attr, void *handler);
 
 void register_handler(int i, void* handler);
 
-void set_interrupt_desc(struct gate_desc *p_gate_desc, uint8 attr, void *handler);
-
 void init_interrupt_desc();
 
-void init_idt();
-
 void init_pic();
+
+void init_idt();
 
 #endif
