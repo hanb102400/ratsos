@@ -1,5 +1,4 @@
-;Rats OS
-;TAB=4
+;ratsos
 [bits 16]
     org     0x7c00 			;指明程序的偏移的基地址
 
@@ -11,42 +10,41 @@
 ;程序核心内容
 Entry:
 
-    ;---------------------------
-    ;清除屏幕	
-    mov ah,0x06							
+	;---------------------------
+    ;清除屏幕	    
+    mov ah,0x06				
+    mov bh,0x07					
     mov al,0
     mov cx,0   
     mov dx,0xffff  
     mov bh,0x17				;属性为蓝底白字
     int 0x10
     
-    ;---------------------------
+    ;---------------------------			
     ;光标位置初始化
     mov ah,0x02				
-    mov dx,0
     mov bh,0
-    mov dh,0x0
-    mov dl,0x0
+    mov dx,0
     int 0x10
 
     ;---------------------------
     ;输出字符串
-    mov  si, BootMsg		;将BootMsg的地址放入si
-    mov  dh, 0				;设置显示行
-    call PutString			;调用函数
+    mov  si,HelloMsg		    ;将HelloMsg的地址放入si
+    call Print_String			;调用函数
     
-;程序挂起
-Fin:
-    hlt 					;让CPU挂起，等待指令。
-    jmp Fin
+    jmp $				;进入死循环，不再往下执行。
+
+; ------------------------------------------------------------------------
+; 字符串常量
+HelloMsg: db "hello,ratsos!",0
 
 
 ; ------------------------------------------------------------------------
-; 显示字串函数:PutString
+; 显示字串函数:Print_String
 ; 参数:
 ; si = 字符串文本地址
 ; ------------------------------------------------------------------------
-PutString:
+Print_String:
 	;------------------
 	;显示一个字符，si = 字符串文本地址
     .putChar:
@@ -54,19 +52,15 @@ PutString:
         inc si					;di指向下一个字节
         cmp al,0				;判断[di]中的字符值是否==0
 
-        je .putEnd			;为0字符则串结束
+        je .putEnd				;为0字符则串结束
         mov ah,0x0e				;BIOS中断参数：中断模式
         mov bl,0x03				;BIOS中断参数：指定字符颜色
         int 0x10				;调用BIOS中断操作显卡。输出字符
         jmp .putChar
    .putEnd:
         ret
+        
 
-; ------------------------------------------------------------------------
-;准备显示字符串
-BootMsg: db "ratsos is booting!",0
-
-;扇区格式
-Fill0:
-    resb    510-($-$$)       	;处理当前行$至结束(1FE)填充0
+FillSector:
+    resb    510-($-$$)       	;处理当前行$至结束(1FE)的填充
     db      0x55, 0xaa
