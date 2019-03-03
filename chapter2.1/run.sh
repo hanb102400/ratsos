@@ -1,7 +1,6 @@
 #!/bin/bash
 
 NASM=nasm
-QEMU=qemu-system-x86_64
-mkdir build
-$NASM -f bin -o build/ratsos.img boot/boot.asm
-$QEMU -m 128 -rtc base=localtime -fda build/ratsos.img
+$NASM -f bin -o boot.bin boot/boot.asm
+dd if=/dev/zero of=ratsos.ima bs=512 count=2880
+dd if=boot.bin  of=ratsos.ima bs=512 count=1  conv=notrunc
