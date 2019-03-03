@@ -11,7 +11,8 @@
 ;程序入口
 Entry:
 
-Clear_Screen: 				;清除屏幕	    
+	;---------------------------
+    ;清除屏幕	    
     mov ah,0x06				
     mov bh,0x07					
     mov al,0
@@ -20,7 +21,8 @@ Clear_Screen: 				;清除屏幕
     mov bh,0x17				;属性为蓝底白字
     int 0x10
     
-Init_Cusor: 				; 光标位置初始化
+    ;---------------------------			
+    ;光标位置初始化
     mov ah,0x02				
     mov bh,0
     mov dx,0
