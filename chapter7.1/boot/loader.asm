@@ -116,8 +116,9 @@ AnalyzeELF:
 
 
 ;------------------    
-;内存复制 : 源地址，目标地址，字节数
-;输入： 
+; MemCopy(esi,edi,ecx)
+;内存复制 : MemCopy
+;输入 ： 
 ;esi = 源地址
 ;edi = 目标地址
 ;ecx = 字节数

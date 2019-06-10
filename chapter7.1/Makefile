@@ -21,7 +21,7 @@ image:$(build)/ratsos.img
 	@echo "complete build ratsos.img"
 
 $(build)/ratsos.img: $(build)/boot.bin $(build)/loader.bin $(build)/kernel.bin
-	$(BXIMAGE) -hd -mode=flat -size=32 -q $(build)/ratsos.img 
+	$(BXIMAGE) -mode=create  -hd=32M  -imgmode=flat  -q $(build)/ratsos.img 
 	sleep 1
 	dd if=$(build)/boot.bin of=$(build)/ratsos.img bs=512 count=1  conv=notrunc
 	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=4 seek=1 conv=notrunc
