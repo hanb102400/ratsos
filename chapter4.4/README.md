@@ -1,39 +1,12 @@
-## 刷新流水线
 
 
 
-```
-[bits 16]
-	;------------------
-	;打开A20
-    in al,0x92
-    or al,0000_0010B        ;设置第1位为1
-    out 0x92,al
-	
-	;-----------------------------------------------
-	;加载GDT
-	lgdt [gdt_addr]
-	
-	;------------------
-    ;进入保护模式
-    mov eax,CR0
-    or  eax,0x00000001      ; 设置第0位为1
-    mov CR0,eax
-	
-	
-	jmp	 dword   1000B:Pipeflush  
 
-[bits 32]
-;------------------    
-;清空流水线
-Pipeflush:
-		mov		ax,1*8			;  可读写的32bit
-		mov		ds,ax
-		mov		es,ax
-		mov		fs,ax
-		mov		gs,ax
 
-```
+
+
+
+
 
 ### 文件位置
 

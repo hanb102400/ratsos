@@ -56,6 +56,6 @@ LOADER1_BASE_ADDR       equ 0x9A00  ;内存地址0x9200
 
 
 ;-------------    选择子 --------------------------
-selector_code equ 0x1<<3
-selector_data equ 0x2<<3
-selector_vga  equ 0x3<<3
+SELECTOR_CODE equ 0x1<<3
+SELECTOR_DATA equ 0x2<<3
+SELECTOR_VGA  equ 0x3<<3

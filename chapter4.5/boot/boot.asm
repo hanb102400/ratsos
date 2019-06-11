@@ -1,4 +1,5 @@
 ;RatsOS
+
 [bits 16]
 
 %include "boot/boot.inc"
@@ -121,33 +122,33 @@ ReadDiskLBA16:
     ret
 
 ; ------------------------------------------------------------------------
-; 显示字符串函数:PutString
+; 显示字符串函数:PrintString
 ; 参数:
 ; si = 字符串开始地址,
 ; dh = 第N行，0开始
+; dl = 第N列，0开始
 ; ------------------------------------------------------------------------
-PutString:
-            mov cx,0			;BIOS中断参数：显示字符串长度
-            mov bx,di
-    .s1:;获取字符串长度
-            mov al,[bx]			;读取1个字节到al
-            add bx,1			;读取下个字节
-            cmp al,0			;是否以0结束
+PrintString:
+            mov cx,0              ; BIOS中断参数：显示字符串长度
+            mov bx,si
+    .s1:                          ; 获取字符串长度
+            mov al,[bx]           ; 读取1个字节到al
+            add bx,1              ; 读取下个字节
+            cmp al,0              ; 是否以0结束
             je .s2
-            add	cx,1			;计数器
+            inc	cx                ; 计数器
             jmp .s1
-    .s2:;显示字符串
-            mov bx,di
+    .s2:                          ; 显示字符串
+            mov bx,si
             mov bp,bx
             mov ax,ds
-            mov es,ax			;BIOS中断参数：计算[ES:BP]为显示字符串开始地址
+            mov es,ax             ; BIOS中断参数：计算[ES:BP]为显示字符串开始地址
 
-            mov ah,0x13			;BIOS中断参数：显示文字串
-            mov al,0x01			;BIOS中断参数：文本输出方式(40×25 16色 文本)
-            mov bh,0x0			;BIOS中断参数：指定分页为0
-            mov bl,0x1F			;BIOS中断参数：指定白色文字			
-            mov dl,0			;列号为0
-            int 0x10			;调用BIOS中断操作显卡。输出字符串
+            mov ah,0x13           ; BIOS中断参数：中断模式
+            mov al,0x01           ; BIOS中断参数：输出方式
+            mov bh,0x0            ; BIOS中断参数：指定分页为0
+            mov bl,0x1F           ; BIOS中断参数：显示属性，指定白色文字
+            int 0x10              ; 调用BIOS中断操作显卡。输出字符串
             ret
 
 

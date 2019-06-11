@@ -1,16 +1,15 @@
 
-
-
+# tools
 NASM=nasm
+QEMU=qemu-system-x86_64
+QEMU-IMG=qemu-img
 BOCHS=bochs
 BXIMAGE=bximage
 
 
+# args
 boot=boot
-build=build
-
-
-boot=boot
+kernel=kernel
 build=build
 	
 
@@ -18,21 +17,22 @@ target: prepare image
 	$(BOCHS) -f bochsrc.me
 
 
-image: $(build)/ratsos.img
-
-
-
-$(build)/ratsos.img: $(build)/boot.bin $(build)/loader.bin
+image: $(build)/boot.bin $(build)/loader.bin $(build)/kernel.bin
 	$(BXIMAGE) -mode=create  -hd=32M  -imgmode=flat  -q $(build)/ratsos.img 
 	sleep 2
 	dd if=$(build)/boot.bin of=$(build)/ratsos.img bs=512 count=1  conv=notrunc
-	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=1 seek=1 conv=notrunc
+	dd if=$(build)/loader.bin of=$(build)/ratsos.img bs=512 count=4 seek=1 conv=notrunc
+	dd if=$(build)/kernel.bin of=$(build)/ratsos.img bs=512 count=25 seek=5 conv=notrunc
+
+
+$(build)/kernel.bin: $(kernel)/main.asm
+	$(NASM) -f bin -o $(build)/kernel.bin $(kernel)/main.asm	
 
 $(build)/%.bin: $(boot)/%.asm
 	$(NASM) -f bin -o $(build)/$*.bin $(boot)/$*.asm	
 
 prepare:
-	#@echo "prepare dir $(build)"
+	@echo "prepare dir $(build)"
     ifeq ($(build), $(wildcard $(build)))
 		@echo "build directory exist..."
     else

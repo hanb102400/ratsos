@@ -3,7 +3,8 @@ PLATFORM=Linux
 NASM=nasm
 BOCHS=bochs
 BXIMAGE=bximage
-
+CC=cc
+LD=ld
 
 # args
 boot=boot

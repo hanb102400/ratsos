@@ -1,43 +1,29 @@
-; RatsOS
+;RatsOS
 [bits 16]
 
-org     0x7c00           ; 指明程序的偏移的基地址
+;----------- loader const ------------------
+LOADER_BASE_ADDR 		equ 0x9000  ;内存地址0x9000
+;---------------------------------------	
 
-                         ; 引导扇区代码
-jmp     Entry
-db      0x90
-db      "RATSBOOT"       ; 启动区的名称可以是任意的字符串（8字节）
+section loader vstart=LOADER_BASE_ADDR ;指明程序的偏移的基地址
 
-                         ; 程序核心内容
+;程序核心内容
 Entry:
+	
 
-    ; ---------------------------
-    ; 清除屏幕
-    mov ah,0x06
-    mov al,0
-    mov cx,0
-    mov dx,0xffff
-    mov bh,0x17          ; 属性为蓝底白字
-    int 0x10
+	;---------------------------
+    ;输出字符串
+    mov si,HelloMsg			;将HelloMsg的地址放入si
+    mov dh,0				;设置显示行
+	mov dl,0				;设置显示列
+    call PrintString		;调用函数
 
-    ; ---------------------------
-    ; 光标位置初始化
-    mov ah,0x02
-    mov dx,0
-    mov bh,0
-    mov dh,0x0
-    mov dl,0x0
-    int 0x10
 
-    ; ---------------------------
-    ; 输出字符串
-    mov si,HelloMsg      ; 将HelloMsg的地址放入si
-    mov dh,0             ; 设置显示行
-    mov dl,0             ; 设置显示列
-    call PrintString     ; 调用函数
-
-    jmp $                ; 进入死循环
-
+;程序挂起
+Fin:
+    hlt 					;让CPU挂起，等待指令。
+    jmp Fin
+	
 ; ------------------------------------------------------------------------
 ; 显示字符串函数:PrintString
 ; 参数:
@@ -68,9 +54,7 @@ PrintString:
             int 0x10     ; 调用BIOS中断操作显卡。输出字符串
             ret
 
-; 准备显示字符串
-HelloMsg: db "hello,ratsos!",0
+;准备显示字符串
+HelloMsg: DB "hello,ratsos!",0
 
-FillSector:
-    resb    510-($-$$)   ; 处理当前行$至结束(1FE)的填充
-    db      0x55, 0xaa
+	times	512-($-$$) db  0 ; 处理当前行$至结束(1FE)的填充	

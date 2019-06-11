@@ -26,13 +26,7 @@ Gdt_Table_Addr:
 
 ;程序核心内容
 Entry:
-
-    ;------------------
-    ;设置显示模式  320x200x256色
-    mov ah, 0x0             ;VGA显示器模式
-    mov al, 0x13		    ;320x200x256色	
-    int	0x10	
-
+    
     ;------------------
     ;禁止CPU级别的中断，进入保护模式时没有建立中断表
     cli	
@@ -53,7 +47,7 @@ Entry:
     or 		eax,0x1      ;设置第0位为1
     mov 	cr0,eax
 
-    jmp	 dword   selector_code:FlushPipeline     
+    jmp	 dword   SELECTOR_CODE:FlushPipeline     
 
  
 [bits 32]
@@ -124,9 +118,3 @@ AnalyzeELF:
 MemCopy:
     rep movsb; 
     ret
-
-
-;程序挂起
-Fin:
-    hlt 					;让CPU挂起，等待指令。
-    jmp Fin

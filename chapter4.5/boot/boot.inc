@@ -35,6 +35,9 @@ DESC_S_SYS  equ		      0_0000b       ;系统段
 DESC_TYPE_CODE  equ	        1010b	    ;x=1代码段,c=0普通,r=1可读,a=0未访问  
 DESC_TYPE_DATA  equ	        0010b	    ;x=0数据段,e=0向高位扩展,w=1可写,a=0已访问位a清0.
 
+DESC_CODE equ  DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_P + DESC_DPL_0 + DESC_S_CODE + DESC_TYPE_CODE 
+DESC_DATA equ  DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_P + DESC_DPL_0 + DESC_S_DATA + DESC_TYPE_DATA 
+
 ;--------------   选择子属性  ---------------
 RPL0  equ   00b
 RPL1  equ   01b
@@ -42,11 +45,6 @@ RPL2  equ   10b
 RPL3  equ   11b
 TI_GDT	 equ   000b
 TI_LDT	 equ   100b
-
-
-;---------------------
-DESC_CODE equ  DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_P + DESC_DPL_0 + DESC_S_CODE + DESC_TYPE_CODE 
-DESC_DATA equ  DESC_G_4K + DESC_D_32 + DESC_L + DESC_AVL + DESC_P + DESC_DPL_0 + DESC_S_DATA + DESC_TYPE_DATA 
 
 
 ;----------- loader const ------------------
@@ -58,6 +56,6 @@ LOADER1_BASE_ADDR       equ 0x9A00  ;内存地址0x9200
 
 
 ;-------------    选择子 --------------------------
-selector_code equ 0x1<<3
-selector_data equ 0x2<<3
-selector_vga  equ 0x3<<3
+SELECTOR_CODE equ 0x1<<3
+SELECTOR_DATA equ 0x2<<3
+SELECTOR_VGA equ 0x3<<3
