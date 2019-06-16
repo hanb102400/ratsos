@@ -1,6 +1,8 @@
 #ifndef __LIB_GLOBAL_H
 #define __LIB_GLOBAL_H
 
+
+/** GDT/IDT */
 #define RPL0 0
 #define RPL1 1
 #define RPL2 2
@@ -24,7 +26,7 @@
 #define IDT_DESC_ATTR_DPL3 ((IDT_DESC_P << 7) + (IDT_DESC_DPL3 << 5) + IDT_DESC_TYPE32)
 
 
-
+/** PIC */
 #define PIC0_ICW1  0x20
 #define PIC0_ICW2  0x21
 #define PIC0_ICW3  0x21
@@ -36,6 +38,5 @@
 #define PIC1_ICW3  0xa1
 #define PIC1_ICW4  0xa1
 #define PIC1_IMR   0xa1
-
 
 #endif

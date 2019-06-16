@@ -1,7 +1,4 @@
 
-
-
-
 ;---------------------------------------------------------
 ; 描述符
 ; usage: Gdt_Descriptor Base, Limit, Attr ：  段基址(32位),段界限(20位),段描述符(12位)
@@ -49,13 +46,13 @@ TI_LDT	 equ   100b
 
 ;----------- loader const ------------------
 LOADER_SECTOR_LBA  		equ 0x1		;第2个逻辑扇区开始
-LOADER_SECTOR_COUNT		equ 29		;读取9个扇区
-LOADER_BASE_ADDR 		equ 0x9200  ;内存地址0x9200
-LOADER1_BASE_ADDR       equ 0x9A00  ;内存地址0x9200
+LOADER_SECTOR_COUNT		equ 29		;读取29个扇区
+LOADER_BASE_ADDR 		equ 0x9000  ;内存地址0x9000
+KERNEL_BASE_ADDR        equ 0x9800  ;内存地址0x9800
 ;-------------------------------------------
 
 
 ;-------------    选择子 --------------------------
-selector_code equ 0x1<<3
-selector_data equ 0x2<<3
-selector_vga  equ 0x3<<3
+SELECTOR_CODE equ 0x1<<3
+SELECTOR_DATA equ 0x2<<3
+SELECTOR_VGA  equ 0x3<<3

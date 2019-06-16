@@ -4,9 +4,9 @@
 
 #include "stdint.h"
 
-uint32 getCursor();
+uint16 getCursor();
 
-void setCursor(uint32 pos);
+void setCursor(uint16 pos);
 
 void putchar(char ch);
 

@@ -3,34 +3,38 @@
 #include "../include/io.h"
 #include "../include/stdint.h"
 
-#define VGA_BASE 0xB8000;
+#define VGA_BASE 0xB8000
+#define DATA_BASE 0x60000
 
-uint32 getCursor()
-{
-    io_outb(0x3d4, 0x0e);
-    uint32 cursorHigh = io_inb(0x3d5);
-    io_outb(0x3d4, 0x0f);
-    uint32 cursorLow = io_inb(0x3d5);
+uint16 getCursor()
+{   
+    //get high cursor value
+    io_out8(0x3d4, 0x0e);
+    uint8 cursorHigh = io_in8(0x3d5);
+    //get low cursor value
+    io_out8(0x3d4, 0x0f);
+    uint8 cursorLow = io_in8(0x3d5);
+    //high + low
     return (cursorHigh << 8) + (cursorLow & 0xff);
 }
 
-void setCursor(uint32 pos)
+void setCursor(uint16 pos)
 {
-    uint32 cursorHigh = pos >> 8;
-    uint32 cursorLow = pos & 0xff;
-    io_outb(0x3d4, 0x0e);
-    io_outb(0x3d5, cursorHigh);
-    io_outb(0x3d4, 0x0f);
-    io_outb(0x3d5, cursorLow);
+    uint8 cursorHigh = pos >> 8;
+    uint8 cursorLow = pos & 0xff;
+    //set high cursor value
+    io_out8(0x3d4, 0x0e);
+    io_out8(0x3d5, cursorHigh);
+    //set low cursor value
+    io_out8(0x3d4, 0x0f);
+    io_out8(0x3d5, cursorLow);
 }
 
 void putchar(char ch)
 {
 
-    uint32 pos = getCursor();
+    uint16 pos = getCursor();
     char *pvga = (char *)VGA_BASE;
-
-#define DATA_BASE 0x60000
 
     //zifu
     switch (ch)
