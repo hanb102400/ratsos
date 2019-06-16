@@ -2,24 +2,44 @@
 
 
 
+## 文件分布
+
+| 磁盘区域                    | 大小| 数据内容   | 说明     |
+| ----------------------| ----- | ---------- | -------- |
+| 0x0000 - 0x0200  |（1个扇区）  | boot.bin   | 引导扇区 |
+| 0x0200 - 0x0A00  |（4个扇区）  | loader.bin | loader扇区 |
 
 
 
+## 内存分布
+**实模式**
+
+> 实模式内存访问限制： 0 - 0xFFFFF
+
+| 内存区域            | 大小   | 数据内容        | 说明                   |
+| -------------------| ------ | --------------- | ---------------------- |
+| 0x0000 - 0x03FF     | 1K     |                 | 中断向量表             |
+| 0x0400 - 0x04FF     | 256B   |                 | BIOS数据区             |
+| 0x7C00 - 0x7DFF     | 512B   | boot.bin        | 引导扇区在内存位置     |
+| 0x9000 - 0x97FF     | 2048B  | loader.bin      | loader内存位置       |
+|    ...              |  ...  |      ...   |    ...  |
+| 0x9FC00 - 0x9FFFF   | 1K     |                 | 扩展BISO数据区域       |
+| 0xB8000 - 0xB8FFFF  |        |                 | 显存地址(默认)         |
 
 
 
-### 文件位置
+## GDT信息
 
-boot.bin  扇区0
-loader.bin 扇区1-4
-
-### 内存信息
-
-0x7c00 boot.bin
-0x9000 loader.bin
-0x9800 loader1.bin
+| GDT           | 段类型   | 基本地址        | 限制                   | 属性|
+| -------------------| ------ | --------------- | ---------------------- |------ |
+| GDT[0x00]    | Data segment|base=0x00000000  | limit=0xffffffff     | Read/Write |
+| GDT[0x01]    | Code segment|base=0x00280000  | limit=0x0007ffff   |  Execute/Read, Non-Con |
 
 
-### GDT信息
-GDT[0x00]=Data segment, base=0x00000000, limit=0xffffffff, Read/Write
-GDT[0x01]=Code segment, base=0x00280000, limit=0x0007ffff, Execute/Read, Non-Con
+## 文件目录
+```
+src
+    boot 
+       boot.asm 
+```
+

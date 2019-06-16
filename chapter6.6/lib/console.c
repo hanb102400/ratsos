@@ -4,7 +4,6 @@
 #include "../include/stdint.h"
 
 #define VGA_BASE 0xB8000;
-#define DATA_BASE 0x60000
 
 uint32 getCursor()
 {
@@ -30,6 +29,8 @@ void putchar(char ch)
 
     uint32 pos = getCursor();
     char *pvga = (char *)VGA_BASE;
+
+#define DATA_BASE 0x60000
 
     //zifu
     switch (ch)
